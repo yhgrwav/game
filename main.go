@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	params := events.StartGame()
-	log.Println(params)
+	hero := events.StartGame()
+	log.Println(hero)
 }
