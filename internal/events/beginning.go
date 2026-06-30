@@ -4,12 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"game/internal/entity"
+	"game/internal/methods"
 	"log"
 	"os"
 	"strings"
 )
 
-func StartGame() entity.HeroParams {
+func StartGame() *entity.Hero {
 	fmt.Printf("Игра началась\nВыберите класс персонажа:\n1.Воин\n2.Варвар\n3.Разбойник\n(Введите 1 | 2 | 3)")
 	var counter uint8
 	for {
@@ -42,11 +43,11 @@ func StartGame() entity.HeroParams {
 
 		switch result {
 		case "1":
-			return entity.Heroes[entity.HeroClass(entity.Warrior)]()
+			return methods.NewHero(entity.Warrior)
 		case "2":
-			return entity.Heroes[entity.HeroClass(entity.Barbarian)]()
+			return methods.NewHero(entity.Barbarian)
 		case "3":
-			return entity.Heroes[entity.HeroClass(entity.Robber)]()
+			return methods.NewHero(entity.Robber)
 		}
 	}
 }
