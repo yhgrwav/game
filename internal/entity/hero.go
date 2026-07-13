@@ -1,8 +1,12 @@
 package entity
 
 type Hero struct {
-	Attributes attributes
+	Attributes Attributes
 	Class      HeroClass
 	Weapon     Weapon
-	Bonuses    []Bonus
+	Bonuses    []BonusName
+	Level      uint8
+	HP         uint8
+	MaxHP      uint8
+	HpPerLevel uint8
 }
