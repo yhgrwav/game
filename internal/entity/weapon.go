@@ -1,56 +1,23 @@
 package entity
 
-type damageType int
+type DamageType int
 
 const (
-	unknown damageType = iota
+	// UnknownDamage - нулевое значение, осмысленного оружия с таким типом не бывает.
+	UnknownDamage DamageType = iota
 
-	// Рубящий
-	chopping
+	// Chopping - рубящий.
+	Chopping
 
-	// Дробящий
-	crushing
+	// Crushing - дробящий.
+	Crushing
 
-	// Колющий
-	pricking
+	// Pricking - колющий.
+	Pricking
 )
 
 type Weapon struct {
 	Name    string
 	Damage  uint16
-	DmgType damageType
+	DmgType DamageType
 }
-
-// Таблица оружия.
-var (
-	Sword = Weapon{
-		Name:    "Sword",
-		Damage:  3,
-		DmgType: chopping,
-	}
-	Club = Weapon{
-		Name:    "club",
-		Damage:  3,
-		DmgType: crushing,
-	}
-	Dagger = Weapon{
-		Name:    "dagger",
-		Damage:  2,
-		DmgType: pricking,
-	}
-	Axe = Weapon{
-		Name:    "axe",
-		Damage:  4,
-		DmgType: chopping,
-	}
-	Spear = Weapon{
-		Name:    "spear",
-		Damage:  3,
-		DmgType: pricking,
-	}
-	LegendarySword = Weapon{
-		Name:    "legendary sword",
-		Damage:  10,
-		DmgType: chopping,
-	}
-)
