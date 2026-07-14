@@ -1,81 +1,104 @@
 package catalog
 
-import "game/internal/entity"
+import (
+	"fmt"
 
-// Bonuses - таблица бонусов.
-//
-// Обычная (не ленивая) мапа: бонусы статичны и не хранят состояния конкретного героя,
-// всё нужное Income/Outcome берут из FightContext в момент вызова. Пересоздавать их на каждое
-// обращение незачем, поэтому функция-конструктор в значении здесь (в отличие от Heroes) не нужна.
-// Их читают на каждый удар в бою, так что лишние аллокации тут были бы особенно некстати.
+	"game/internal/entity"
+)
+
+// Балансные параметры бонусов
+const (
+	rageDamageBonus = 2 // насколько ярость поднимает урон, пока не спала
+	rageDuration    = 3 // сколько ходов держится ярость
+	ragePenalty     = 1 // насколько ярость режет урон после того, как спала
+
+	shieldReduction   = 3 // насколько щит режет входящий урон
+	hiddenAttackBonus = 1 // прибавка скрытой атаки при перевесе в ловкости
+	impulseMultiplier = 2 // во сколько раз порыв к действию множит урон в первый ход
+	poisonPerRound    = 1 // насколько яд наращивает урон с каждым ходом
+
+	attributeGainStep = 1 // на сколько бонусы вида "+1 к атрибуту" двигают атрибут
+)
+
+// Bonuses - таблица бонусов (идентификатор -> что бонус собой представляет и что делает)
 var Bonuses = map[entity.BonusName]entity.Bonus{
 	entity.Rage: {
-		Description: "+2 к урону в первые 3 хода, потом −1 к урону",
+		Title:       "Ярость",
+		Description: fmt.Sprintf("+%d к урону в первые %d хода, потом −%d к урону", rageDamageBonus, rageDuration, ragePenalty),
 		Outcome: func(ctx entity.FightContext, damage uint16) uint16 {
-			if ctx.Round <= 3 {
-				return damage + 2
+			if ctx.Round <= rageDuration {
+				return damage + rageDamageBonus
 			}
-			return damageChecker(damage, 1)
+			return damageChecker(damage, ragePenalty)
 		},
 	},
 	entity.StoneSkin: {
+		Title:       "Каменная кожа",
 		Description: "получаемый урон снижается на значение выносливости",
 		Income: func(ctx entity.FightContext, damage uint16) uint16 {
 			return damageChecker(damage, uint16(ctx.Defender.Attributes.Stamina))
 		},
 	},
 	entity.HiddenAttack: {
-		Description: "+1 к урону, если ловкость персонажа выше ловкости цели",
+		Title:       "Скрытая атака",
+		Description: fmt.Sprintf("+%d к урону, если ловкость персонажа выше ловкости цели", hiddenAttackBonus),
 		Outcome: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Attacker.Attributes.Agility > ctx.Defender.Attributes.Agility {
-				return damage + 1
+				return damage + hiddenAttackBonus
 			}
 			return damage
 		},
 	},
 	entity.Shield: {
-		Description: "−3 к получаемому урону, если сила персонажа выше силы атакующего",
+		Title:       "Щит",
+		Description: fmt.Sprintf("−%d к получаемому урону, если сила персонажа выше силы атакующего", shieldReduction),
 		Income: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Defender.Attributes.Strength > ctx.Attacker.Attributes.Strength {
-				return damageChecker(damage, 3)
+				return damageChecker(damage, shieldReduction)
 			}
 			return damage
 		},
 	},
 	entity.ImpulseToAction: {
-		Description: "в первый ход двойной урон оружием",
+		Title:       "Порыв к действию",
+		Description: fmt.Sprintf("в первый ход урон оружием умножается на %d", impulseMultiplier),
 		Outcome: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Round == 1 {
-				return damage * 2
+				return damage * impulseMultiplier
 			}
 			return damage
 		},
 	},
 	entity.Poison: {
-		Description: "доп. +1 урона на 2-м ходу, +2 на 3-м и т.д.",
+		Title: "Яд",
+		Description: fmt.Sprintf("доп. +%d урона на 2-м ходу, +%d на 3-м и так далее",
+			poisonPerRound, poisonPerRound*2),
 		Outcome: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Round >= 2 {
-				return damage + uint16(ctx.Round-1)
+				return damage + uint16(ctx.Round-1)*poisonPerRound
 			}
 			return damage
 		},
 	},
 	entity.AgilityUp: {
-		Description: "+1 к ловкости",
+		Title:       fmt.Sprintf("Ловкость +%d", attributeGainStep),
+		Description: fmt.Sprintf("+%d к ловкости", attributeGainStep),
 		AttributeGain: func(h *entity.Hero) {
-			h.Attributes.Agility++
+			h.Attributes.Agility += attributeGainStep
 		},
 	},
 	entity.StrengthUp: {
-		Description: "+1 к силе",
+		Title:       fmt.Sprintf("Сила +%d", attributeGainStep),
+		Description: fmt.Sprintf("+%d к силе", attributeGainStep),
 		AttributeGain: func(h *entity.Hero) {
-			h.Attributes.Strength++
+			h.Attributes.Strength += attributeGainStep
 		},
 	},
 	entity.StaminaUp: {
-		Description: "+1 к выносливости",
+		Title:       fmt.Sprintf("Выносливость +%d", attributeGainStep),
+		Description: fmt.Sprintf("+%d к выносливости", attributeGainStep),
 		AttributeGain: func(h *entity.Hero) {
-			h.Attributes.Stamina++
+			h.Attributes.Stamina += attributeGainStep
 		},
 	},
 }
