@@ -1,22 +1,30 @@
 package methods
 
-import "game/internal/entity"
+import (
+	"game/internal/catalog"
+	"game/internal/entity"
+)
 
 func NewHero(class entity.HeroClass) *entity.Hero {
-	build, ok := entity.Heroes[class]
+	build, ok := catalog.Heroes[class]
 	if !ok {
 		return nil // невалидный класс
 	}
 	params := build()
+	maxHP := params.HpPerLevel + uint8(params.BasicAttributes.Stamina)
+
 	return &entity.Hero{
 		Attributes: params.BasicAttributes,
 		Class:      class,
 		Weapon:     params.Weapon,
-		// бонусы прокидываем в самого героя - именно отсюда Fight их потом перебирает
-		Bonuses: []entity.Bonus{
+		Bonuses: []entity.BonusName{
 			params.BonusOne,
 			params.BonusTwo,
 			params.BonusThree,
 		},
+		Level:      1,
+		HP:         maxHP,
+		MaxHP:      maxHP,
+		HpPerLevel: params.HpPerLevel,
 	}
 }
