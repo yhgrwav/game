@@ -1,6 +1,6 @@
 package entity
 
-// Logic - модификатор урона. Всё, что нужно для решения, бонус берёт из FightContext:
+// Logic - модификатор урона: всё для решения бонус берёт из FightContext -
 // кто бьёт, кого бьют и какой сейчас ход
 type Logic func(ctx FightContext, damage uint16) uint16
 

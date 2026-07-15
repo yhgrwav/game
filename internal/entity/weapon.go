@@ -3,16 +3,16 @@ package entity
 type DamageType int
 
 const (
-	// UnknownDamage - нулевое значение, осмысленного оружия с таким типом не бывает.
+	// UnknownDamage - нулевое значение, осмысленного оружия с таким типом не бывает
 	UnknownDamage DamageType = iota
 
-	// Chopping - рубящий.
+	// Chopping - рубящий
 	Chopping
 
-	// Crushing - дробящий.
+	// Crushing - дробящий
 	Crushing
 
-	// Pricking - колющий.
+	// Pricking - колющий
 	Pricking
 )
 

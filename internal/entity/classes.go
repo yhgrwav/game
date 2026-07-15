@@ -13,8 +13,8 @@ type ClassInfo struct {
 	Title string
 }
 
-// ClassTemplate - статика класса без рандома, одинаковая для всех героев класса.
-// Bonuses упорядочены по уровню: индекс = уровень-1.
+// ClassTemplate - статика класса без рандома, одинаковая для всех героев класса
+// Bonuses упорядочены по уровню: индекс = уровень-1
 type ClassTemplate struct {
 	HpPerLevel uint8
 	Weapon     Weapon

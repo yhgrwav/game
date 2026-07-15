@@ -25,7 +25,7 @@ func offerLevelUp(hero *entity.Hero) {
 		fmt.Println("Максимальный уровень (3) достигнут.")
 		return
 	}
-	fmt.Println("Повысить уровень? Выберите класс (0 — пропустить):")
+	fmt.Println("Повысить уровень? Выберите класс (0 - пропустить):")
 	for i, c := range catalog.Classes {
 		fmt.Printf("%d.%s\n", i+1, c.Title)
 	}
@@ -38,7 +38,7 @@ func offerLevelUp(hero *entity.Hero) {
 }
 
 func offerWeapon(hero *entity.Hero, drop entity.Weapon) {
-	fmt.Printf("Выпало оружие: %s (%d урона). Заменить? (1 — да, иначе нет)\n", drop.Name, drop.Damage)
+	fmt.Printf("Выпало оружие: %s (%d урона). Заменить? (1 - да, иначе нет)\n", drop.Name, drop.Damage)
 	if readLine() == "1" {
 		hero.Weapon = drop
 		fmt.Printf("Оружие заменено на %s.\n", drop.Name)

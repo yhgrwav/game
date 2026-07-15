@@ -6,44 +6,27 @@ import (
 	"game/internal/entity"
 )
 
-// Heroes - таблица классов
-//
-// ключ - HeroClass, значение - конструктор для класса
-var Heroes = map[entity.HeroClass]func() entity.HeroParams{
-	entity.Robber: func() entity.HeroParams {
-		return entity.HeroParams{
-			BasicAttributes: rollAttributes(),
-			HpPerLevel:      4,
-			Weapon:          Dagger,
-			BonusOne:        entity.HiddenAttack,
-			BonusTwo:        entity.AgilityUp,
-			BonusThree:      entity.Poison,
-		}
+// Templates - статика классов (без атрибутов, они случайны на каждого героя)
+var Templates = map[entity.HeroClass]entity.ClassTemplate{
+	entity.Robber: {
+		HpPerLevel: 4,
+		Weapon:     Dagger,
+		Bonuses:    [3]entity.BonusName{entity.HiddenAttack, entity.AgilityUp, entity.Poison},
 	},
-	entity.Warrior: func() entity.HeroParams {
-		return entity.HeroParams{
-			BasicAttributes: rollAttributes(),
-			HpPerLevel:      5,
-			Weapon:          Sword,
-			BonusOne:        entity.ImpulseToAction,
-			BonusTwo:        entity.Shield,
-			BonusThree:      entity.StrengthUp,
-		}
+	entity.Warrior: {
+		HpPerLevel: 5,
+		Weapon:     Sword,
+		Bonuses:    [3]entity.BonusName{entity.ImpulseToAction, entity.Shield, entity.StrengthUp},
 	},
-	entity.Barbarian: func() entity.HeroParams {
-		return entity.HeroParams{
-			BasicAttributes: rollAttributes(),
-			HpPerLevel:      6,
-			Weapon:          Club,
-			BonusOne:        entity.Rage,
-			BonusTwo:        entity.StoneSkin,
-			BonusThree:      entity.StaminaUp,
-		}
+	entity.Barbarian: {
+		HpPerLevel: 6,
+		Weapon:     Club,
+		Bonuses:    [3]entity.BonusName{entity.Rage, entity.StoneSkin, entity.StaminaUp},
 	},
 }
 
-// rollAttributes перекатывает все три атрибута нового героя
-func rollAttributes() entity.Attributes {
+// RollAttributes перекатывает атрибуты нового героя (каждый 1-3)
+func RollAttributes() entity.Attributes {
 	return entity.Attributes{
 		Strength: entity.Strength(randomAttribute()),
 		Agility:  entity.Agility(randomAttribute()),
@@ -51,7 +34,6 @@ func rollAttributes() entity.Attributes {
 	}
 }
 
-// randomAttribute возвращает случайное число от 1 до 3 включительно
 func randomAttribute() uint16 {
 	return uint16(rand.Intn(3) + 1)
 }

@@ -24,7 +24,7 @@ const (
 var Bonuses = map[entity.BonusName]entity.Bonus{
 	entity.Rage: {
 		Title:       "Ярость",
-		Description: fmt.Sprintf("+%d к урону в первые %d хода, потом −%d к урону", rageDamageBonus, rageDuration, ragePenalty),
+		Description: fmt.Sprintf("+%d к урону в первые %d хода, потом -%d к урону", rageDamageBonus, rageDuration, ragePenalty),
 		Outcome: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Round <= rageDuration {
 				return damage + rageDamageBonus
@@ -51,7 +51,7 @@ var Bonuses = map[entity.BonusName]entity.Bonus{
 	},
 	entity.Shield: {
 		Title:       "Щит",
-		Description: fmt.Sprintf("−%d к получаемому урону, если сила персонажа выше силы атакующего", shieldReduction),
+		Description: fmt.Sprintf("-%d к получаемому урону, если сила персонажа выше силы атакующего", shieldReduction),
 		Income: func(ctx entity.FightContext, damage uint16) uint16 {
 			if ctx.Defender.Attributes.Strength > ctx.Attacker.Attributes.Strength {
 				return damageChecker(damage, shieldReduction)
@@ -103,7 +103,7 @@ var Bonuses = map[entity.BonusName]entity.Bonus{
 	},
 }
 
-// damageChecker вычитает resist из урона с полом в 0 (беззнаковый тип не уходит в минус).
+// damageChecker вычитает resist из урона с полом в 0 (беззнаковый тип не уходит в минус)
 func damageChecker(dmg, resist uint16) uint16 {
 	if resist >= dmg {
 		return 0

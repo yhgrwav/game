@@ -26,7 +26,7 @@ func Hits(attacker, defender *entity.Combatant) bool {
 }
 
 // Attack проводит удар: проверяет попадание, считает урон и вычитает его из HP
-// цели. Возвращает нанесённый урон и флаг попадания
+// цели, возвращает нанесённый урон и флаг попадания
 func Attack(attacker, defender *entity.Combatant, round uint8) (damage uint16, hit bool) {
 	if !Hits(attacker, defender) {
 		return 0, false
