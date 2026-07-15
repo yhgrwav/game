@@ -10,7 +10,7 @@
 ## Запуск
 
 ```sh
-git clone <repo-url>
+git clone https://github.com/yhgrwav/game/edit/main/
 cd game
 go run main.go
 ```
