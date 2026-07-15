@@ -103,10 +103,7 @@ var Bonuses = map[entity.BonusName]entity.Bonus{
 	},
 }
 
-// damageChecker безопасно вычитает resist из урона: при resist >= dmg возвращает 0,
-// чтобы беззнаковый uint16 не ушёл в минус и не превратился в десятки тысяч.
-// Живёт рядом с Bonuses, потому что нужен только их замыканиям: унеси его в methods -
-// и получишь цикл импортов (methods уже импортирует catalog).
+// damageChecker вычитает resist из урона с полом в 0 (беззнаковый тип не уходит в минус).
 func damageChecker(dmg, resist uint16) uint16 {
 	if resist >= dmg {
 		return 0
